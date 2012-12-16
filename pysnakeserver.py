@@ -4,13 +4,13 @@ import socket
 import threading
 import time
 from lib import config
-from lib.types.packages import Package, UserQuit, HandShake, UpdateState
+from lib.types.packages import Package, UserQuit, HandShake, UpdateState, UpdateDirection
 from lib.types.snake import Snake, Coords
 
 class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     connections = {}
-    game_objects = []
+    game_objects = {}
 
     def handle(self):
         socket_ = self.request
@@ -43,7 +43,10 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
         if isinstance(package, UserQuit):
             del PySnakeHandler.connections[client_addr]
         elif isinstance(package, HandShake):
-            PySnakeHandler.game_objects.append(Snake(Coords.get_random()))
+            PySnakeHandler.game_objects[client_addr] = Snake(Coords.get_random())
+        elif isinstance(package, UpdateDirection):
+            if client_addr in PySnakeHandler.game_objects:
+                PySnakeHandler.game_objects[client_addr].direction = package.direction
 
     @staticmethod
     def __broadcast(package):
@@ -55,7 +58,7 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     @staticmethod
     def broadcast_state():
-        PySnakeHandler.__broadcast(UpdateState(PySnakeHandler.game_objects))
+        PySnakeHandler.__broadcast(UpdateState(PySnakeHandler.game_objects.values()))
 
 def print_user_info():
     while True:
@@ -65,6 +68,9 @@ def print_user_info():
 def broadcast_state():
     while True:
         time.sleep(0.05)
+        for snake in PySnakeHandler.game_objects.values():
+            if isinstance(snake, Snake):
+                snake.move()
         PySnakeHandler.broadcast_state()
 
 def run_server():

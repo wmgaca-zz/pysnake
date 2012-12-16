@@ -62,7 +62,10 @@ class SocketHandler(object):
             except socket.error, e:
                 time.sleep(0.1)
                 continue
-            package = pickle.loads(data)
+            try:
+                package = pickle.loads(data)
+            except EOFError:
+                continue
             if not package:
                 continue
             handler(package)

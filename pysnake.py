@@ -4,7 +4,10 @@ from pygame import locals
 from lib import config
 from lib.net import SocketHandler
 from lib.types import packages
+from lib.types.packages import UpdateState
 from lib.types.snake import Snake, Coords, Direction, Apple
+
+game_objects = []
 
 def init_pygame_env():
     """Initialize pygame environment.
@@ -23,10 +26,12 @@ def package_dispatcher(package):
 
     print 'Dispatching: %s' % package
 
+    if isinstance(package, UpdateState):
+        global game_objects
+        game_objects = package.game_objects
+
 def main():
     surface = init_pygame_env()
-    snake = Snake(Coords(2, 2))
-    game_objects = [snake, Apple.get_random()]
     socket_handler = SocketHandler(package_dispatcher)
 
     # Send handshake
@@ -41,11 +46,9 @@ def main():
                          0)
 
         # Draw game objects
+        print 'game objects: %s' % game_objects
         for game_object in game_objects:
             game_object.draw(surface)
-
-        # Draw something
-        pygame.draw.line(surface, pygame.Color('White'), (10, 10,), (100, 100,), 5)
 
         # Refresh the screen
         pygame.display.flip()
@@ -60,19 +63,20 @@ def main():
                 sys.exit(config.RETURN_OK)
 
             elif event.type == pygame.KEYDOWN:
+                direction = None
+
                 if event.key == locals.K_LEFT:
-                    snake.direction = Direction.LEFT
+                    direction = Direction.LEFT
                 elif event.key == locals.K_RIGHT:
-                    snake.direction = Direction.RIGHT
+                    direction = Direction.RIGHT
                 elif event.key == locals.K_UP:
-                    snake.direction = Direction.UP
+                    direction = Direction.UP
                 elif event.key == locals.K_DOWN:
-                    snake.direction = Direction.DOWN
+                    direction = Direction.DOWN
 
-        # Send snake direction
-        socket_handler.send(packages.UpdateDirection(snake.direction))
-
-        snake.move()
+                # Send snake direction
+                if direction:
+                    socket_handler.send(packages.UpdateDirection(direction))
 
         clock.tick(config.FPS)
 
