@@ -1,6 +1,6 @@
 CAPTION = 'PySnake'
 SCREEN_SIZE = (800, 600,)
-FPS = 25
+FPS = 100
 TILE_SIZE = (10, 10,)
 RETURN_OK = 0
 

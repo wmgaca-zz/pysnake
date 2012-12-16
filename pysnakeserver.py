@@ -1,25 +1,29 @@
 import SocketServer
 import pickle
+import random
 import socket
 import threading
 import time
+import pygame
 from lib import config
 from lib.types.packages import Package, UserQuit, HandShake, UpdateState, UpdateDirection
-from lib.types.snake import Snake, Coords
+from lib.types.snake import Snake, Coords, Apple
 
 class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     connections = {}
-    game_objects = {}
+    game_objects = {'apples': []}
 
     def handle(self):
         print 'Handle new connection.'
+
+        client_id = id(self)
 
         socket_ = self.request
         socket_.setblocking(0)
 
         # Add socket to connections list
-        PySnakeHandler.connections[self.client_address[0]] = socket_
+        PySnakeHandler.connections[client_id] = socket_
 
         while True:
             try:
@@ -31,14 +35,11 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
                 continue
 
             package = pickle.loads(data)
-
-            PySnakeHandler.package_dispatcher(package,
-                                              self.client_address[0])
+            PySnakeHandler.package_dispatcher(package, client_id)
 
             if isinstance(package, UserQuit):
                 return
-
-            if not PySnakeHandler.client_connected(self.client_address[0]):
+            if not PySnakeHandler.client_connected(client_id):
                 return
 
     @staticmethod
@@ -76,7 +77,14 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     @staticmethod
     def broadcast_state():
-        PySnakeHandler.__broadcast(UpdateState(PySnakeHandler.game_objects.values()))
+        game_objects = []
+        for game_object in PySnakeHandler.game_objects.values():
+            if isinstance(game_object, list):
+                game_objects.extend(game_object)
+            else:
+                game_objects.append(game_object)
+
+        PySnakeHandler.__broadcast(UpdateState(game_objects))
 
 def print_user_info():
     while True:
@@ -84,12 +92,19 @@ def print_user_info():
         print 'Connected users: %s' % len(PySnakeHandler.connections)
 
 def broadcast_state():
+    clock = pygame.time.Clock()
+
     while True:
-        time.sleep(0.05)
+        if not len(PySnakeHandler.game_objects['apples']):
+            PySnakeHandler.game_objects['apples'].append(Apple(Coords.get_random()))
+
         for game_object in PySnakeHandler.game_objects.values():
             if isinstance(game_object, Snake):
                 game_object.move()
+
         PySnakeHandler.broadcast_state()
+
+        clock.tick(25)
 
 def run_server():
     server = SocketServer.ThreadingTCPServer((config.SERVER_HOST, config.SERVER_PORT),

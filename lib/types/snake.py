@@ -83,7 +83,10 @@ class Snake(sprite.Sprite):
 
         print 'Create new Snake!'
 
-        self.position = [coords, coords.moved(Direction.LEFT)]
+        self.position = [coords,
+                         coords.moved(Direction.LEFT),
+                         coords.moved(Direction.LEFT, 2),
+                         coords.moved(Direction.LEFT, 3)]
 
     @property
     def direction(self):
