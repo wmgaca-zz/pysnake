@@ -17,6 +17,11 @@ def init_pygame_env():
 
     return surface
 
+def package_dispatcher(package):
+    """Dispatch package received from the server.
+    """
+
+    print 'Dispatching: %s' % package
 
 def main():
     surface = init_pygame_env()
