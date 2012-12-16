@@ -1,6 +1,7 @@
 import socket
 import pickle
 import threading
+import time
 from lib import config
 from lib.types.packages import Package
 
@@ -15,6 +16,9 @@ class SocketHandler(object):
         print 'Trying to connect...'
         self.socket.connect((config.SERVER_HOST, config.SERVER_PORT))
         print 'Connected!'
+
+        # Make the socket non-blocking
+        self.socket.setblocking(0)
 
         # Create listening thread
         listening_thread = threading.Thread(target=SocketHandler.listen,
@@ -45,7 +49,12 @@ class SocketHandler(object):
         """
 
         while True:
-            package = pickle.loads(socket_.recv(1024))
+            try:
+                data = socket_.recv(1024)
+            except socket.error, e:
+                time.sleep(0.1)
+                continue
+            package = pickle.loads(data)
             if not package:
                 continue
             handler(package)

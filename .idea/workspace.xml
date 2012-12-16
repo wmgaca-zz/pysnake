@@ -23,7 +23,7 @@
       <file leaf-file-name="pysnake.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysnake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="20" selection-start="476" selection-end="476" vertical-scroll-proportion="0.0">
+            <state line="78" column="0" selection-start="2241" selection-end="2241" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -31,10 +31,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="net.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="net.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/net.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="28" selection-start="1393" selection-end="1393" vertical-scroll-proportion="0.9204322">
+            <state line="12" column="71" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -42,10 +42,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pysnakeserver.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="pysnakeserver.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pysnakeserver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="41" selection-start="556" selection-end="556" vertical-scroll-proportion="0.0">
+            <state line="37" column="0" selection-start="975" selection-end="975" vertical-scroll-proportion="0.7524558">
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -57,10 +57,7 @@
         <entry file="file://$PROJECT_DIR$/lib/types/packages.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="10" column="0" selection-start="190" selection-end="190" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1355582847402" expanded="true" signature="291:519" placeholder="..." />
-                <marker date="1355582847402" expanded="true" signature="453:519" placeholder="..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -120,10 +117,10 @@
         <option value="C:/Python26/Lib/SocketServer.py" />
         <option value="$PROJECT_DIR$/lib/types/snake.py" />
         <option value="$PROJECT_DIR$/lib/types/net.py" />
-        <option value="$PROJECT_DIR$/pysnakeserver.py" />
         <option value="$PROJECT_DIR$/lib/types/packages.py" />
-        <option value="$PROJECT_DIR$/pysnake.py" />
         <option value="$PROJECT_DIR$/lib/net.py" />
+        <option value="$PROJECT_DIR$/pysnake.py" />
+        <option value="$PROJECT_DIR$/pysnakeserver.py" />
       </list>
     </option>
   </component>
@@ -502,36 +499,40 @@
     <entry file="file://$PROJECT_DIR$/lib/types/packages.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="0" selection-start="190" selection-end="190" vertical-scroll-proportion="0.0">
-          <folding>
-            <marker date="1355582847402" expanded="true" signature="291:519" placeholder="..." />
-            <marker date="1355582847402" expanded="true" signature="453:519" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysnake.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="20" selection-start="476" selection-end="476" vertical-scroll-proportion="0.0">
+        <state line="78" column="0" selection-start="2241" selection-end="2241" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pysnakeserver.py">
+    <entry file="file://$PROJECT_DIR$/lib/net.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="41" selection-start="556" selection-end="556" vertical-scroll-proportion="0.0">
+        <state line="12" column="71" selection-start="312" selection-end="312" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/net.py">
+    <entry file="file://C:/Python26/Lib/socket.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="28" selection-start="1393" selection-end="1393" vertical-scroll-proportion="0.9204322">
+        <state line="202" column="6" selection-start="6758" selection-end="6758" vertical-scroll-proportion="0.33660588">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysnakeserver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="0" selection-start="975" selection-end="975" vertical-scroll-proportion="0.7524558">
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

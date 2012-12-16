@@ -27,7 +27,7 @@ def main():
     surface = init_pygame_env()
     snake = Snake(Coords(2, 2), surface=surface)
     game_objects = [snake, Apple.get_random(surface)]
-    socket_handler = SocketHandler()
+    socket_handler = SocketHandler(package_dispatcher)
 
     # Send handshake
     socket_handler.send(packages.HandShake())
@@ -67,7 +67,6 @@ def main():
                     snake.direction = Direction.UP
                 elif event.key == locals.K_DOWN:
                     snake.direction = Direction.DOWN
-                    print "DOWN!!"
 
         # Send snake direction
         socket_handler.send(packages.UpdateDirection(snake.direction))
