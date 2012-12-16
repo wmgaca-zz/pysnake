@@ -21,9 +21,12 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
         while True:
             try:
-                data = socket_.recv(1024)
+                data = socket_.recv(100000)
             except socket.error, e:
                 continue
+
+            if not PySnakeHandler.client_connected(self.client_address[0]):
+                return
 
             if not data:
                 continue
@@ -37,11 +40,20 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
                 return
 
     @staticmethod
+    def client_connected(client_addr):
+        return client_addr in PySnakeHandler.game_objects
+
+    @staticmethod
+    def remove_client(client_addr):
+        del PySnakeHandler.connections[client_addr]
+        del PySnakeHandler.game_objects[client_addr]
+
+    @staticmethod
     def package_dispatcher(package, client_addr):
         assert isinstance(package, Package)
 
         if isinstance(package, UserQuit):
-            del PySnakeHandler.connections[client_addr]
+            PySnakeHandler.remove_client(client_addr)
         elif isinstance(package, HandShake):
             PySnakeHandler.game_objects[client_addr] = Snake(Coords.get_random())
         elif isinstance(package, UpdateDirection):
@@ -50,11 +62,13 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     @staticmethod
     def __broadcast(package):
-        for connection in PySnakeHandler.connections.values():
+        for client_addr, connection in PySnakeHandler.connections:
             try:
                 connection.sendall(package.serialize())
             except socket.error:
-                print 'Cannot send package %s to %s' % (package, connection)
+                print 'Cannot send package %s to %s' % (package, client_addr)
+                PySnakeHandler.remove_client(client_addr)
+
 
     @staticmethod
     def broadcast_state():
@@ -68,9 +82,9 @@ def print_user_info():
 def broadcast_state():
     while True:
         time.sleep(0.05)
-        for snake in PySnakeHandler.game_objects.values():
-            if isinstance(snake, Snake):
-                snake.move()
+        for game_object in PySnakeHandler.game_objects.values():
+            if isinstance(game_object, Snake):
+                game_object.move()
         PySnakeHandler.broadcast_state()
 
 def run_server():
