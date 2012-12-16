@@ -25,9 +25,6 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
             except socket.error, e:
                 continue
 
-            if not PySnakeHandler.client_connected(self.client_address[0]):
-                return
-
             if not data:
                 continue
 
@@ -39,14 +36,19 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
             if isinstance(package, UserQuit):
                 return
 
+            if not PySnakeHandler.client_connected(self.client_address[0]):
+                return
+
     @staticmethod
     def client_connected(client_addr):
         return client_addr in PySnakeHandler.game_objects
 
     @staticmethod
     def remove_client(client_addr):
-        del PySnakeHandler.connections[client_addr]
-        del PySnakeHandler.game_objects[client_addr]
+        if client_addr in PySnakeHandler.connections:
+            del PySnakeHandler.connections[client_addr]
+        if client_addr in PySnakeHandler.game_objects:
+            del PySnakeHandler.game_objects[client_addr]
 
     @staticmethod
     def package_dispatcher(package, client_addr):
@@ -62,7 +64,7 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     @staticmethod
     def __broadcast(package):
-        for client_addr, connection in PySnakeHandler.connections:
+        for client_addr, connection in PySnakeHandler.connections.items():
             try:
                 connection.sendall(package.serialize())
             except socket.error:
