@@ -13,6 +13,8 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
     game_objects = {}
 
     def handle(self):
+        print 'Handle new connection.'
+
         socket_ = self.request
         socket_.setblocking(0)
 
@@ -78,7 +80,7 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
 def print_user_info():
     while True:
-        time.sleep(1)
+        time.sleep(2)
         print 'Connected users: %s' % len(PySnakeHandler.connections)
 
 def broadcast_state():
@@ -90,8 +92,8 @@ def broadcast_state():
         PySnakeHandler.broadcast_state()
 
 def run_server():
-    server = SocketServer.TCPServer((config.SERVER_HOST, config.SERVER_PORT),
-                                    PySnakeHandler)
+    server = SocketServer.ThreadingTCPServer((config.SERVER_HOST, config.SERVER_PORT),
+                                              PySnakeHandler)
 
     user_info_thread = threading.Thread(target=print_user_info)
     user_info_thread.start()

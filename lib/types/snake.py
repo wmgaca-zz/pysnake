@@ -81,9 +81,9 @@ class Snake(sprite.Sprite):
     def __init__(self, coords):
         super(Snake, self).__init__(coords)
 
-        self.position = [coords, coords.moved(Direction.LEFT)]
+        print 'Create new Snake!'
 
-        print self.position
+        self.position = [coords, coords.moved(Direction.LEFT)]
 
     @property
     def direction(self):
