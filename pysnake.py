@@ -56,6 +56,7 @@ def main():
         for event in events:
             if event.type == locals.QUIT:
                 socket_handler.send(packages.UserQuit())
+                socket_handler.close()
                 sys.exit(config.RETURN_OK)
 
             elif event.type == pygame.KEYDOWN:

@@ -21,10 +21,10 @@ class SocketHandler(object):
         self.socket.setblocking(0)
 
         # Create listening thread
-        listening_thread = threading.Thread(target=SocketHandler.listen,
-                                            args=(self.socket, handler))
+        self.listening_thread = threading.Thread(target=SocketHandler.listen,
+                                                 args=(self.socket, handler))
         # Start the thread
-        listening_thread.start()
+        self.listening_thread.start()
 
     def __del__(self):
         self.close()
@@ -36,6 +36,8 @@ class SocketHandler(object):
             self.socket.sendall(package.serialize())
 
     def close(self):
+        self.listening_thread.join()
+
         if self.socket:
             self.socket.close()
 

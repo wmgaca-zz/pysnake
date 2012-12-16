@@ -27,7 +27,7 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
             package = pickle.loads(data)
 
             # Print the data
-            print "[%s] %s: data: %s" % (id(self), self.client_address[0], package)
+            print "[%s] %s: data: % s" % (id(self), self.client_address[0], package)
 
             PySnakeHandler.package_dispatcher(package,
                                               self.client_address[0])
