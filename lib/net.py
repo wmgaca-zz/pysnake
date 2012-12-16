@@ -7,6 +7,8 @@ from lib.types.packages import Package
 
 class SocketHandler(object):
 
+    _listen = True
+
     def __init__(self, handler):
         # Create socket
         print 'Opening socket...'
@@ -36,6 +38,7 @@ class SocketHandler(object):
             self.socket.sendall(package.serialize())
 
     def close(self):
+        SocketHandler._listen = False
         self.listening_thread.join()
 
         if self.socket:
@@ -50,7 +53,7 @@ class SocketHandler(object):
             handler: Function called to handle received data
         """
 
-        while True:
+        while SocketHandler._listen:
             try:
                 data = socket_.recv(1024)
             except socket.error, e:
