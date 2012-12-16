@@ -38,6 +38,11 @@ class Coords(object):
 
         self.x %= config.SCREEN_SIZE[0] / config.TILE_SIZE[0]
         self.y %= config.SCREEN_SIZE[1] / config.TILE_SIZE[1]
+
+    @staticmethod
+    def get_random():
+        return Coords(random.randint(0, config.SCREEN_SIZE[0] // config.TILE_SIZE[0]),
+                      random.randint(0, config.SCREEN_SIZE[1] // config.TILE_SIZE[1]))
         
 class Direction(object):
     UP = 'up'
@@ -73,8 +78,8 @@ class Snake(sprite.Sprite):
     _direction = Direction.RIGHT
     position = []
     
-    def __init__(self, coords, surface):
-        super(Snake, self).__init__(coords, surface)
+    def __init__(self, coords):
+        super(Snake, self).__init__(coords)
 
         self.position = [coords, coords.moved(Direction.LEFT)]
 
@@ -92,11 +97,11 @@ class Snake(sprite.Sprite):
             return
         self._direction = new_direction
 
-    def _draw(self):
+    def _draw(self, surface):
         for position in self.position:
             draw_tile(coords=position, 
                       color=pygame.Color('Red'), 
-                      surface=self.surface)
+                      surface=surface)
 
     def move(self):
         # Get rid of the last element
@@ -110,16 +115,14 @@ class Snake(sprite.Sprite):
 
 class Apple(sprite.Sprite):
 
-    def __init__(self, coords, surface):
-        super(Apple, self).__init__(coords, surface)
+    def __init__(self, coords):
+        super(Apple, self).__init__(coords)
 
-    def _draw(self):
+    def _draw(self, surface):
         draw_tile(coords=self.coords,
                   color=pygame.Color('Green'),
-                  surface=self.surface)
+                  surface=surface)
 
     @staticmethod
-    def get_random(surface):
-        coords = Coords(random.randint(0, config.SCREEN_SIZE[0] // config.TILE_SIZE[0]),
-                        random.randint(0, config.SCREEN_SIZE[1] // config.TILE_SIZE[1]))
-        return Apple(coords, surface)
+    def get_random():
+        return Apple(Coords.get_random())

@@ -3,16 +3,14 @@ class Sprite(object):
 
     coords = None
     updated = True
-    surface = None
 
-    def __init__(self, coords, surface):
+    def __init__(self, coords):
         self.coords = coords
         self.updated = True
-        self.surface = surface
 
-    def _draw(self):
+    def _draw(self, surface):
         raise NotImplementedError
 
-    def draw(self):
-        self._draw()
+    def draw(self, surface):
+        self._draw(surface)
         self.updated = False

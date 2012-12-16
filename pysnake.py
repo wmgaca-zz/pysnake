@@ -25,8 +25,8 @@ def package_dispatcher(package):
 
 def main():
     surface = init_pygame_env()
-    snake = Snake(Coords(2, 2), surface=surface)
-    game_objects = [snake, Apple.get_random(surface)]
+    snake = Snake(Coords(2, 2))
+    game_objects = [snake, Apple.get_random()]
     socket_handler = SocketHandler(package_dispatcher)
 
     # Send handshake
@@ -42,7 +42,7 @@ def main():
 
         # Draw game objects
         for game_object in game_objects:
-            game_object.draw()
+            game_object.draw(surface)
 
         # Draw something
         pygame.draw.line(surface, pygame.Color('White'), (10, 10,), (100, 100,), 5)

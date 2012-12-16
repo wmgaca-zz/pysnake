@@ -35,7 +35,10 @@ class SocketHandler(object):
         assert isinstance(package, Package)
 
         if self.socket:
-            self.socket.sendall(package.serialize())
+            try:
+                self.socket.sendall(package.serialize())
+            except socket.error:
+                print 'Cannot send package: %s' % package
 
     def close(self):
         SocketHandler._listen = False
@@ -55,7 +58,7 @@ class SocketHandler(object):
 
         while SocketHandler._listen:
             try:
-                data = socket_.recv(1024)
+                data = socket_.recv(100000)
             except socket.error, e:
                 time.sleep(0.1)
                 continue

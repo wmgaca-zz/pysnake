@@ -1,12 +1,16 @@
 import SocketServer
 import pickle
 import socket
+import threading
+import time
 from lib import config
-from lib.types.packages import Package
+from lib.types.packages import Package, UserQuit, HandShake, UpdateState
+from lib.types.snake import Snake, Coords
 
 class PySnakeHandler(SocketServer.BaseRequestHandler):
 
     connections = {}
+    game_objects = []
 
     def handle(self):
         socket_ = self.request
@@ -26,22 +30,57 @@ class PySnakeHandler(SocketServer.BaseRequestHandler):
 
             package = pickle.loads(data)
 
-            # Print the data
-            print "[%s] %s: data: % s" % (id(self), self.client_address[0], package)
-
             PySnakeHandler.package_dispatcher(package,
                                               self.client_address[0])
 
-    @classmethod
-    def package_dispatcher(cls, package, client_addr):
+            if isinstance(package, UserQuit):
+                return
+
+    @staticmethod
+    def package_dispatcher(package, client_addr):
         assert isinstance(package, Package)
 
+        if isinstance(package, UserQuit):
+            del PySnakeHandler.connections[client_addr]
+        elif isinstance(package, HandShake):
+            PySnakeHandler.game_objects.append(Snake(Coords.get_random()))
+
+    @staticmethod
+    def __broadcast(package):
+        for connection in PySnakeHandler.connections.values():
+            try:
+                connection.sendall(package.serialize())
+            except socket.error:
+                print 'Cannot send package %s to %s' % (package, connection)
+
+    @staticmethod
+    def broadcast_state():
+        PySnakeHandler.__broadcast(UpdateState(PySnakeHandler.game_objects))
+
+def print_user_info():
+    while True:
+        time.sleep(1)
+        print 'Connected users: %s' % len(PySnakeHandler.connections)
+
+def broadcast_state():
+    while True:
+        time.sleep(0.05)
+        PySnakeHandler.broadcast_state()
 
 def run_server():
     server = SocketServer.TCPServer((config.SERVER_HOST, config.SERVER_PORT),
                                     PySnakeHandler)
+
+    user_info_thread = threading.Thread(target=print_user_info)
+    user_info_thread.start()
+
+    broadcast_state_thread = threading.Thread(target=broadcast_state)
+    broadcast_state_thread.start()
+
     print 'Running server on %s:%s' % (config.SERVER_HOST, config.SERVER_PORT)
     server.serve_forever()
+
+    user_info_thread.join()
 
 if __name__ == '__main__':
     run_server()
