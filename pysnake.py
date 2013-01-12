@@ -46,7 +46,6 @@ def main():
                          0)
 
         # Draw game objects
-        print 'game objects: %s' % game_objects
         for game_object in game_objects:
             game_object.draw(surface)
 
